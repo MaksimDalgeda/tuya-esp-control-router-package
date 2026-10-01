@@ -1,0 +1,55 @@
+include $(TOPDIR)/rules.mk
+
+PKG_NAME:=tuya-esp-daemon
+PKG_VERSION:=1.0.0
+PKG_RELEASE:=1
+
+PKG_SOURCE_PROTO:=git
+PKG_SOURCE_URL:=https://github.com/MaksimDalgeda/tuya-esp-control.git
+PKG_SOURCE_VERSION:=893341b9fc6fea254390f1fcbe56291510c3ec38
+
+PKG_MIRROR_HASH:=skip
+
+PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
+
+include $(INCLUDE_DIR)/package.mk
+
+define Package/tuya-esp-daemon
+	SECTION:=utils
+	CATEGORY:=Utilities
+	TITLE:=Tuya ESP control daemon
+	DEPENDS:=+tuya_iot_core +cJSON +libubus +libubox +libblobmsg-json +libuci
+endef
+
+define Package/tuya-esp-daemon/description
+	Tuya daemon for controlling ESP devices through UBUS
+endef
+
+define Build/Configure
+endef
+
+define Build/Compile
+	$(MAKE) -C $(PKG_BUILD_DIR) \
+		CC="$(TARGET_CC)" \
+		AR="$(TARGET_AR)" \
+		STRIP="$(TARGET_STRIP)" \
+		STAGING_DIR="$(STAGING_DIR)" \
+		TUYA_SDK="$(STAGING_DIR)/usr" \
+		SDK_BUILD_DIR="$(STAGING_DIR)/usr"
+endef
+
+define Package/tuya-esp-daemon/install
+	$(INSTALL_DIR) $(1)/usr/bin
+
+	$(INSTALL_BIN) \
+		$(PKG_BUILD_DIR)/build/tuya-monitor-daemon \
+		$(1)/usr/bin/tuya-monitor-daemon
+
+	$(INSTALL_DIR) $(1)/etc/init.d
+
+	$(INSTALL_BIN) \
+		./files/etc/init.d/tuya-esp-daemon \
+		$(1)/etc/init.d/tuya-esp-daemon
+endef
+
+$(eval $(call BuildPackage,tuya-esp-daemon))
