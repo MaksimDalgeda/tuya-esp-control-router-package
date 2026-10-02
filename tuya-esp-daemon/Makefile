@@ -6,7 +6,7 @@ PKG_RELEASE:=1
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/MaksimDalgeda/tuya-esp-control.git
-PKG_SOURCE_VERSION:=3df9f3dc9a3ee799632ae023091cb38c581d4974
+PKG_SOURCE_VERSION:=341f39ad872b2e0fec989ed594b6adb2b3d48e8c
 
 PKG_MIRROR_HASH:=skip
 
